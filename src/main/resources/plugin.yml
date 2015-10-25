@@ -1,0 +1,11 @@
+name: Staff
+main: me.daniel.staff.Core
+version: 1.0
+author: Comp
+commands:
+   staff:
+      description: Toggle staff mode for you or another player
+      usage: /<command> [player]
+   freeze:
+      description: Toggle freeze a player
+      usage: /<command> [player]
