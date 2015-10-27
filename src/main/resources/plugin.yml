@@ -4,8 +4,17 @@ version: 1.0
 author: Comp
 commands:
    staff:
-      description: Toggle staff mode for you or another player
+      description: Toggle staff mode for you or another player.
       usage: /<command> [player]
    freeze:
-      description: Toggle freeze a player
+      description: Toggle freeze a player.
       usage: /<command> [player]
+   sc:
+      description: Toggle or use staff chat.
+      usage: /<command> [message ...]
+   sinvsee:
+      description: View inventories of players.
+      usage: /<command> <player>
+   srtp:
+      description: Teleport to a random player on the server.
+      usage: /<command>

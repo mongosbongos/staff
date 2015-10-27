@@ -14,6 +14,10 @@ public class FreezeCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(cmd.getName().equalsIgnoreCase("freeze")) {
+			if(!sender.hasPermission("staff.freeze")) {
+				Core.sendError(sender, "You do not have permission to use this command.");
+				return true;
+			}
 			switch(args.length) {
 				case 0:
 					if(sender instanceof Player) {
@@ -32,9 +36,7 @@ public class FreezeCommand implements CommandExecutor {
 					}
 					break;
 				case 1:
-					if(!sender.hasPermission("staff.freeze")) {
-						Core.sendError(sender, "You do not have permission to use this command.");
-					}
+					
 					Player p = Bukkit.getPlayer(args[0]);
 					if(p==null) {
 						Core.sendError(sender, "Player not found: " + args[0]);

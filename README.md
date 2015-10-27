@@ -6,8 +6,6 @@
     * Report wrapper for corereport
     * Viewing of player inventories
     * Teleporting to a random player on the server
-
-###Coming soon:
 * Staff chat for staff (`/sc` command)
 * Commands for staff mode utilities (random teleport, invsee)
 
@@ -18,6 +16,13 @@
 * `/staff` - Toggle staff mode for a player
     * No parameters: Toggle staff mode for yourself
     * One parameter: Player name as arg[0]: Toggle staff mode for player arg[0]
+* `/sc` - Toggle or use staff chat
+    * No parameters: Toggle staff chat for yourself
+    * 0> parameters: Send messages in staff chat quickly
+* `/sinvsee` - View a player's inventory
+    * One parameter: View player arg[0]'s inventory
+* `/srtp` - Randomly teleport to a player
+    * No parameters.
 
 ###Permissions:
 * `staff.on` - Force a player into staff mode on login, player cannot leave staff mode.

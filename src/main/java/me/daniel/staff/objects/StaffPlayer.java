@@ -34,6 +34,7 @@ public class StaffPlayer {
 	
 	private static void handlePlayer(Player p, boolean kek) {
 		p.setCanPickupItems(kek);
+		p.setAllowFlight(kek);
 		setPlayersCanSeePlayer(p, kek);
 		if(kek) {
 			StaffListener.setStaffInventory(p);
@@ -42,7 +43,6 @@ public class StaffPlayer {
 			p.teleport(PlayerInformation.getPreviousLocation(p));
 			PlayerInformation.removePlayer(p);
 		}
-		p.setAllowFlight(kek);
 	}
 	
 	private static void setPlayersCanSeePlayer(Player subject, boolean kek) {

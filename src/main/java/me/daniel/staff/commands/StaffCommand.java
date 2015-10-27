@@ -13,7 +13,7 @@ public class StaffCommand implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if(!sender.hasPermission("staff.toggle") || !sender.hasPermission("staff.others")) {
+		if((!sender.hasPermission("staff.toggle") && (!sender.hasPermission("staff.others")))) {
 			Core.sendError(sender, "You do not have permission to use this command.");
 			return true;
 		}

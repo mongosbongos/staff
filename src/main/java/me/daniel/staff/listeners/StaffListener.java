@@ -3,6 +3,7 @@ package me.daniel.staff.listeners;
 import java.util.Random;
 
 import me.daniel.staff.Core;
+import me.daniel.staff.commands.StaffChatCommand;
 import me.daniel.staff.objects.PlayerInformation;
 import me.daniel.staff.objects.StaffPlayer;
 
@@ -19,6 +20,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
@@ -58,6 +60,11 @@ public class StaffListener implements Listener {
 		if(FreezePlayer.isFrozen(e.getPlayer())) {
 			e.setCancelled(true);
 		}
+		
+		ItemStack is = e.getItem().getItemStack();
+		if(is.equals(Core.staffItems[0]) || is.equals(Core.staffItems[1]) || is.equals(Core.staffItems[2]) || is.equals(Core.staffItems[3]) || is.equals(Core.staffItems[4])) {
+			e.setCancelled(true);
+		}
 	}
 	
 	@EventHandler
@@ -68,6 +75,10 @@ public class StaffListener implements Listener {
 		}
 		
 		if(FreezePlayer.isFrozen(e.getPlayer())) {
+			e.setCancelled(true);
+		}
+		ItemStack is = e.getItemDrop().getItemStack();
+		if(is.equals(Core.staffItems[0]) || is.equals(Core.staffItems[1]) || is.equals(Core.staffItems[2]) || is.equals(Core.staffItems[3]) || is.equals(Core.staffItems[4])) {
 			e.setCancelled(true);
 		}
 	}
@@ -101,13 +112,30 @@ public class StaffListener implements Listener {
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
 		//Prevent players in staff mode from using blocks to store staff items
+		ItemStack inHand = e.getPlayer().getItemInHand();
+		if(inHand != null && !inHand.getType().equals(Material.AIR)) {
+			if(!StaffPlayer.isStaff(e.getPlayer())) {
+				if(inHand.equals(Core.staffItems[0]) || inHand.equals(Core.staffItems[1]) || inHand.equals(Core.staffItems[2]) || inHand.equals(Core.staffItems[3]) || inHand.equals(Core.staffItems[4])) {
+					Core.sendError(e.getPlayer(), "You cannot use these items outside of staff mode.");
+					inHand.setType(Material.AIR);
+					e.setCancelled(true);
+					return;
+				}
+			}
+		}
 		if(StaffPlayer.isStaff(e.getPlayer())) {
 			e.setCancelled(true);
 			if(e.getPlayer().getItemInHand().equals(Core.staffItems[0])) {
 				randomTeleportToPlayer(e.getPlayer());
-			} else if(e.getPlayer().getItemInHand().equals(Core.staffItems[3])) {
+			} else if(inHand.equals(Core.staffItems[3])) {
 				Bukkit.getServer().dispatchCommand(e.getPlayer(), "corereport list");
 				Core.sendMessage(e.getPlayer(), "To view a report, use: /corereport admin list <number>");
+			} else if(inHand.equals(Core.staffItems[4])) {
+				if(!(e.getPlayer().getFoodLevel() >= 20)) {
+					e.getPlayer().setFoodLevel(40);
+					e.getPlayer().setSaturation(40.0f);
+					Core.sendMessage(e.getPlayer(), "You have been fed.");
+				}
 			}
 		}
 		
@@ -150,12 +178,23 @@ public class StaffListener implements Listener {
 	@EventHandler
 	public void onEntityInteract(PlayerInteractAtEntityEvent e) {
 		//Prevent players in staff mode from using entities to store staff items (item frames, minecart chests/furnaces, etc)
+		ItemStack inHand = e.getPlayer().getItemInHand();
+		if(inHand != null && !inHand.getType().equals(Material.AIR)) {
+			if(!StaffPlayer.isStaff(e.getPlayer())) {
+				if(inHand.equals(Core.staffItems[0]) || inHand.equals(Core.staffItems[1]) || inHand.equals(Core.staffItems[2]) || inHand.equals(Core.staffItems[3]) || inHand.equals(Core.staffItems[4])) {
+					Core.sendError(e.getPlayer(), "You cannot use these items outside of staff mode.");
+					inHand.setType(Material.AIR);
+					e.setCancelled(true);
+					return;
+				}
+			}
+		}
 		if(StaffPlayer.isStaff(e.getPlayer())) {
 			e.setCancelled(true);
 			if((e.getRightClicked() instanceof ItemFrame || e.getRightClicked() instanceof Minecart)) {
 				Core.sendMessage(e.getPlayer(), "You cannot use this in staff mode.");
 			} else if(e.getRightClicked() instanceof Player) {
-				ItemStack inHand = e.getPlayer().getItemInHand();
+				
 				if(inHand == null || inHand.getType().equals(Material.AIR)) return;
 				//The right click player items, staffItems[1] = book, staffItems[2] = blaze rod
 				if(inHand.equals(Core.staffItems[1])) {
@@ -186,12 +225,18 @@ public class StaffListener implements Listener {
 		if(FreezePlayer.isFrozen((Player)e.getWhoClicked())) {
 			e.setCancelled(true);
 		}
+		
+		ItemStack is = e.getCurrentItem();
+		if(is.equals(Core.staffItems[0]) || is.equals(Core.staffItems[1]) || is.equals(Core.staffItems[2]) || is.equals(Core.staffItems[3]) || is.equals(Core.staffItems[4])) {
+			e.getCurrentItem().setType(Material.AIR);
+			e.setCancelled(true);
+		}
 	}
 	
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent e) {
 		if(FreezePlayer.isFrozen(e.getPlayer())) {
-			if(e.getFrom().getX() != e.getTo().getX() || e.getFrom().getY() != e.getTo().getY() || e.getFrom().getZ() != e.getTo().getZ()) {
+			if(e.getFrom().getX() != e.getTo().getX() || e.getFrom().getY() != e.getTo().getY() || e.getFrom().getZ() != e.getTo().getZ()) { //If the player has moved, cancel the event.
 				e.setCancelled(true);
 			}
 		}
@@ -202,6 +247,14 @@ public class StaffListener implements Listener {
 		if(!FreezePlayer.isFrozen(e.getPlayer())) return;
 		if(!e.getPlayer().hasPermission("staff.freeze") || !e.getMessage().startsWith("/freeze")) {
 			Core.sendError(e.getPlayer(), "You cannot use commands while frozen.");
+			e.setCancelled(true);
+		}
+	}
+	
+	@EventHandler
+	public void onChat(AsyncPlayerChatEvent e) {
+		if(StaffChatCommand.isInStaffChat(e.getPlayer())) {
+			StaffChatCommand.sendStaffChatMessage(e.getPlayer(), e.getMessage());
 			e.setCancelled(true);
 		}
 	}
