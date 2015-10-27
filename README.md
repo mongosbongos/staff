@@ -18,7 +18,7 @@
     * One parameter: Player name as arg[0]: Toggle staff mode for player arg[0]
 * `/sc` - Toggle or use staff chat
     * No parameters: Toggle staff chat for yourself
-    * 0> parameters: Send messages in staff chat quickly
+    * 0< parameters: Send messages in staff chat quickly
 * `/sinvsee` - View a player's inventory
     * One parameter: View player arg[0]'s inventory
 * `/srtp` - Randomly teleport to a player
