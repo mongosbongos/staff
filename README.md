@@ -30,4 +30,3 @@
 * `staff.others` - Allow a player to toggle staff mode for other players (other player does not need any permission to be put into staff mode).
 * `staff.sc` - Allow a player to send and recieve messages in staff chat.
 * `staff.freeze` - Freeze command permission
-
